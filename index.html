@@ -21,29 +21,32 @@
   <div id="container">
 
     <header class="header p-3">
-      <h1 class="cstm-h1">Weather Dashboard</h1>
+      <h1 class="cstm-h1 display-2">Weather Dashboard</h1>
     </header>
 
     <div class="row justify-content-evenly">
 
       <!-- Left-Side Content -->
-      <section id="leftSide" class="col-3 card my-2 bg-white rounded section-shadow">
+      <section id="leftSide" class="col-2 card my-2 bg-white rounded section-shadow">
         <div id="search-bar" class="p-2 my-2">
           <h2 class="cstm-h2">Search for a City:</h2>
           <input type="city" class="form-control" id="search-button" placeholder="Boston">
         </div>
         <div id="history" class="p-2 my-2">
-          <p></p>
+          <!--This whole div will actually need to be appended to the page with js, but I'll do that later. I just need to make sure it looks right rn-->
+          <div>
+            <button type="button" class="btn cstm-btn">Boston</button>
+          </div>
         </div>
       </section>
 
       <!-- Right-Side Content -->
-      <section id="rightSide" class="col-8 my-2 bg-white rounded section-shadow">
+      <section id="rightSide" class="col-9 my-2 bg-white rounded section-shadow">
         <div id="current-forecast" class="p-2 my-2">
           <h3 class="cstm-h3">
             Current Forecast
           </h3>
-<!--This whole div will actually need to be appended to the page with js, but I'll do that later. I just need to make sure it looks right rn-->
+          <!--This whole div will actually need to be appended to the page with js, but I'll do that later. I just need to make sure it looks right rn-->
           <div class="card cstm-card-bg mt-4 mb-2 card-shadow">
             <div class="card-header card-header-text cstm-card-header-bg">
               <span>City Name, Date</span>
