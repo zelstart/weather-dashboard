@@ -1,33 +1,23 @@
-// $(function () {
-// })
-var searchButton = document.getElementById("search-button")
-var searchBar = document.getElementById("search-bar")
+
+$(document).ready(function() {
 
 var searchHistoryList = [];
 
+// when search button is clicked, city name is saved as a variable and textarea is cleared
+$('#search-button').click(function() {
+    var searchBarText = $('#search-bar').val();
+    $('#search-bar').val("")
+    saveSearch(searchBarText)
+})
 
-// searchButton.addEventListener('click', function() {
-//     if (searchHistoryList.length < 9) {
-//         searchHistoryList.pop();
-//         searchHistoryList.unshift(searchBar.val);
-//     } else {
-//         searchHistoryList.unshift(searchBar.val);
-//         searchBar.val("");
-//     }
-//     console.log(searchHistoryList)
-// })
-
-
-$('.search-button').click(function() {
-    var searchBar = $('.search-bar').val;
-    searchBar.trim();
-    searchBar.toUpperCase();
-    if (searchHistoryList.length < 9) {
+function saveSearch(searchBarText) {
+    if (searchHistoryList.length === 9) {
         searchHistoryList.pop();
-        searchHistoryList.unshift(searchBar.val);
+        searchHistoryList.unshift(searchBarText);
     } else {
-        searchHistoryList.unshift(searchBar.val);
-        searchBar.val("");
+        searchHistoryList.unshift(searchBarText);
     }
     console.log(searchHistoryList)
+}
+
 })
