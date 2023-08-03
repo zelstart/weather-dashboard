@@ -48,7 +48,6 @@
 
   .cstm-h3 {
     font-weight: 700;
-    border-bottom: 2px solid var(--accent2);
   }
 
   .card-header-text {
@@ -65,23 +64,27 @@
   }
 
 
-  ul li {
-    list-style: none;
-  }
   .cstm-btn {
     padding: 3px 6px;
     background-color: var(--accent2);
     color: var(--light2);
     border-radius: 4px;
-    display: inline-block;
-    font-size: 1.4em;
+    font-size: 1.2em;
   }
 
-  .cstm-btn:hover {
+  .cstm-btn-2 {
+    padding: 3px 6px;
+    background-color: var(--bg);
+    color: var(--light2);
+    border-radius: 4px;
+    font-size: 1.2em;
+  }
+
+  .cstm-btn:hover, .cstm-btn-2:hover {
     background-color: var(--acc2-25);
     color: var(--light2);
   }
-  .round-top {
+  /* .round-top {
     border-top-left-radius: 10px;
     border-top-right-radius: 10px;
-  }
+  } */
