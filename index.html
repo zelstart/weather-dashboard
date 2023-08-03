@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="assets/css/style.css" />
+  <title>Weather Dashboard</title>
+</head>
+
+<body>
+  <div id="container">
+
+    <header class="header p-3">
+      <h1 class="cstm-h1">Weather Dashboard</h1>
+    </header>
+
+    <div class="row justify-content-evenly">
+
+      <!-- Left-Side Content -->
+      <section id="leftSide" class="col-3 card my-2 bg-white rounded section-shadow">
+        <div id="search-bar" class="p-2 my-2">
+          <h2 class="cstm-h2">Search for a City:</h2>
+          <input type="city" class="form-control" id="search-button" placeholder="Boston">
+        </div>
+        <div id="history" class="p-2 my-2">
+          <p></p>
+        </div>
+      </section>
+
+      <!-- Right-Side Content -->
+      <section id="rightSide" class="col-8 my-2 bg-white rounded section-shadow">
+        <div id="current-forecast" class="p-2 my-2">
+          <h3 class="cstm-h3">
+            Current Forecast
+          </h3>
+<!--This whole div will actually need to be appended to the page with js, but I'll do that later. I just need to make sure it looks right rn-->
+          <div class="card cstm-card-bg mt-4 mb-2 card-shadow">
+            <div class="card-header card-header-text cstm-card-header-bg">
+              <span>City Name, Date</span>
+            </div>
+            <div class="card-body">
+              <p>Temp:</p>
+              <p>Wind:</p>
+              <p>Humidity:</p>
+            </div>
+
+
+          </div>
+        </div>
+        <div id="five-day-forecast" class="p-2 my-2">
+          <h3 class="cstm-h3">
+            5-Day Forecast
+          </h3>
+          <!--This whole div will actually need to be appended to the page with js, but I'll do that later. I just need to make sure it looks right rn-->
+          <div class="row">
+            <div class="col-2 cstm-card-bg p-2 card-shadow mx-3 round-top">
+              <p>Date</p>
+              <p>Weather Emoji</p>
+              <p>Temp:</p>
+              <p>Wind:</p>
+              <p>Humidity:</p>
+            </div>
+
+            <div class="col-2 cstm-card-bg p-2 card-shadow mx-3 round-top">
+              <p>Date</p>
+              <p>Weather Emoji</p>
+              <p>Temp:</p>
+              <p>Wind:</p>
+              <p>Humidity:</p>
+            </div>
+
+            <div class="col-2 cstm-card-bg p-2 card-shadow mx-3 round-top">
+              <p>Date</p>
+              <p>Weather Emoji</p>
+              <p>Temp:</p>
+              <p>Wind:</p>
+              <p>Humidity:</p>
+            </div>
+
+            <div class="col-2 cstm-card-bg p-2 card-shadow mx-3 round-top">
+              <p>Date</p>
+              <p>Weather Emoji</p>
+              <p>Temp:</p>
+              <p>Wind:</p>
+              <p>Humidity:</p>
+            </div>
+
+            <div class="col-2 cstm-card-bg p-2 card-shadow mx-3 round-top">
+              <p>Date</p>
+              <p>Weather Emoji</p>
+              <p>Temp:</p>
+              <p>Wind:</p>
+              <p>Humidity:</p>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+    </div>
+  </div>
+</body>
