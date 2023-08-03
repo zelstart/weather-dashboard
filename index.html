@@ -14,6 +14,12 @@
     rel="stylesheet">
 
   <link rel="stylesheet" href="assets/css/style.css" />
+
+  <script
+  src="https://code.jquery.com/jquery-3.7.0.js"
+  integrity="sha256-JlqSTELeR4TLqP0OG9dxM7yDPqX1ox/HfgiSLBj8+kM="
+  crossorigin="anonymous"></script>
+
   <title>Weather Dashboard</title>
 </head>
 
@@ -28,9 +34,9 @@
 
       <!-- Left-Side Content -->
       <section id="left-side" class="col-2 card my-2 bg-white rounded section-shadow">
-        <div id="search-bar" class="p-2 my-2">
+        <div id="search" class="p-2 my-2">
           <h2 class="cstm-h2">Search for a City:</h2>
-          <input type="city" class="form-control" id="search-bar" placeholder="Boston">
+          <input type="text" class="form-control" id="search-bar" placeholder="Boston">
           <div class="d-grid gap-2">
             <button id="search-button" type="submit" class="btn cstm-btn mt-1">Search!</button>
           </div>
@@ -51,15 +57,15 @@
           </h3>
           <!--This whole div will actually need to be appended to the page with js, but I'll do that later. I just need to make sure it looks right rn-->
           <div id="current-forecast" class="card cstm-card-bg mt-4 mb-2 card-shadow">
+
             <div class="card-header card-header-text cstm-card-header-bg">
-              <span>City Name, Date</span>
+              <span>City Name,</span> <span>Date</span> <span>Emoji</span>
             </div>
             <div class="card-body">
               <p>Temp:</p>
               <p>Wind:</p>
               <p>Humidity:</p>
             </div>
-
 
           </div>
         </div>
@@ -70,6 +76,7 @@
           </h3>
           <!--This whole div will actually need to be appended to the page with js, but I'll do that later. I just need to make sure it looks right rn-->
           <div id="five-day-forecast" class="row mt-4 mb-2">
+
             <div class="col-lg-2 col-4 cstm-card-bg p-2 card-shadow mx-3 mb-3 rounded">
               <p>Date</p>
               <p>Weather Emoji</p>
@@ -106,12 +113,9 @@
               <p>Humidity:</p>
             </div>
             
-
-        </div>
-
+          </div>
       </section>
     </div>
   </div>
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="assets/js/script.js"></script>
 </body>
