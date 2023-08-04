@@ -100,3 +100,20 @@
     outline: none;
     box-shadow: none;
   }
+
+  .hidden {
+    display: none;
+  }
+
+  .bold {
+    color: var(--light2);
+    font-weight: 700;
+  }
+
+  .weather-data {
+    color: var(--light2);
+  }
+
+  .current {
+    font-size: 1.4em;
+  }

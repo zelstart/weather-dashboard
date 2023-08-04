@@ -54,14 +54,23 @@
       </section>
 
       <!-- Right-Side Content -->
-      <section id="right-side" class="col-9 my-2 bg-white rounded section-shadow">
+      <section id="right-side" class="col-9 my-2 bg-white rounded section-shadow hidden">
         <div class="p-2 my-2">
           <h3 class="cstm-h3">
             Current Forecast
             <hr>
           </h3>
           <!-- javascript will create elements here-->
-          <div id="current-forecast">
+            <div id="current-forecast" class="card cstm-card-bg mt-4 mb-2 card-shadow">
+
+              <div class="card-header card-header-text cstm-card-header-bg">
+                <span id="current-date">test</span> <span id="current-weather"></span>
+              </div>
+              <div class="card-body">
+                <span class="current"><span class="bold">Temp:</span> <span class="weather-data" id="current-temp">test</span></span> <br>
+                <span class="current"><span class="bold">Wind:</span> <span class="weather-data" id="current-wind">test</span></span> <br>
+                <span class="current"><span class="bold">Humidity:</span> <span class="weather-data" id="current-humidity">test</span></span>
+              </div>
 
           </div>
         </div>
