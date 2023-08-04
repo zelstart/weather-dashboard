@@ -36,9 +36,12 @@
   }
   
   .cstm-h1 {
+    font-family: 'Bebas Neue', sans-serif;
+    font-variant: all-caps;
     font-weight: 700;
     color: var(--light2);
     text-shadow: var(--shadow) 2px 2px 5px;
+    letter-spacing: .020em;
   }
 
   .cstm-h2 {
@@ -94,3 +97,7 @@
     box-shadow: none;
   }
 
+  .input:focus {
+    outline: none;
+    box-shadow: none;
+  }
