@@ -14,6 +14,13 @@ $(document).ready(function () {
     })
 
     // add a keydown listener for search bar so that hitting the enter key has the same effect as hitting the submit button
+    $('#search-bar').on('keydown', function(event){
+        if (event.keyCode === 13) {
+            $('#search-button').click();
+        }
+
+    })
+
 
     // grab coordinates for user-entered city to use in fetchWeather function
     function fetchCityCoord(cityName) {
@@ -80,6 +87,7 @@ $(document).ready(function () {
         return dayjs(timestamp * 1000).format('MM/DD/YYYY')
     }
 
+    // create elements and append them to the correct spots
 
 
     // adds the latest search to searchHistoryList, storing only the 9 most recent searches
