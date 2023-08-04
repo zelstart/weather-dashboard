@@ -40,14 +40,28 @@ $(document).ready(function () {
             url: forecastQueryURL,
             method: "GET",
             success: function (weatherResponse) {
-                var todayTimestamp = weatherResponse.list[0].dt; // date timestamp -- will need to convert to mm/dd/yyyy format with dayjs
-                var todayDate = formatDate(todayTimestamp);
-                var todayIcon = weatherResponse.list[0].weather[0].icon; // weather icon
-                var todayIconURL = "http://openweathermap.org/img/wn/" + todayIcon + ".png" // need to make the img url for the icon
-                var todayDesc = weatherResponse.list[0].weather[0].description; // weather desc
-                var todayTemp = weatherResponse.list[0].main.temp; // temperature
-                var todayHum = weatherResponse.list[0].main.humidity; // humidity
-                console.log(todayTimestamp, todayDate, todayIcon, todayDesc, todayTemp, todayHum, todayIconURL);
+                var weatherData = []; // an empty container to store the weather data
+                for (var i = 0; i < 6; i++) { // I only need 6 days worth of data.
+                    //but because the timestamps are every three hours and not daily, it's giving me the same day multiple times instead of a new day in each obj
+                    var timestamp = weatherResponse.list[i].dt; // date timestamp -- will need to convert to mm/dd/yyyy format with dayjs
+                    var date = formatDate(timestamp); // convert timestamp with function using dayjs
+                    var icon = weatherResponse.list[i].weather[0].icon; // weather icon
+                    var iconURL = "http://openweathermap.org/img/wn/" + icon + ".png" // need to make the img url for the icon
+                    var desc = weatherResponse.list[i].weather[0].description; // weather desc
+                    var temp = weatherResponse.list[i].main.temp; // temperature
+                    var humidity = weatherResponse.list[i].main.humidity; // humidity
+                    
+                    var dailyWeatherData = { // make a new object containing info for each day made in the loop
+                        timestamp: timestamp,
+                        date: date,
+                        iconURL: iconURL,
+                        description: desc,
+                        temperature: temp,
+                        humidity: humidity,
+                    }
+                    weatherData.push(dailyWeatherData)
+                }
+                console.log(weatherData)
             },
             error: function (error) {
                 console.log("There was an error while fetching weather data, please try again.")
@@ -57,8 +71,8 @@ $(document).ready(function () {
     }
 
     // use Day.js to convert the timestamp into a readable date
-    function formatDate(todayTimestamp) {
-        return dayjs(todayTimestamp * 1000).format('MM/DD/YYYY')
+    function formatDate(timestamp) {
+        return dayjs(timestamp * 1000).format('MM/DD/YYYY')
     }
 
 
