@@ -98,9 +98,10 @@ $(document).ready(function () {
         return dayjs(timestamp * 1000).format('MM • DD • YYYY')
     }
 
-    // create and append elements for current weather. add classes to div with id "current-forecast"
+    // prints data on the page with weather data
 function printWeather(sixDayWeatherData, name) {
     $('#right-side').removeClass("hidden"); // unhides the right-side div
+    // prints current weather data into the "Current Forecast" card
     $('#current-city').text(name)
     $('#current-date').text(' // ' + sixDayWeatherData[0].date + ' // ')
     $('#current-weather').attr("src", sixDayWeatherData[0].iconURL)
@@ -109,6 +110,8 @@ function printWeather(sixDayWeatherData, name) {
     $('#current-wind').text(sixDayWeatherData[0].wind + 'mph')
     $('#current-humidity').text(sixDayWeatherData[0].humidity + '%')
 
+    // for each item after 0 (current day), add a card to the 5-day forecast
+    var forecastCard = $('<div>').addClass('col-lg-2 col-4 cstm-card-bg p-2 card-shadow mx-3 mb-3 rounded')
 
 
 }
