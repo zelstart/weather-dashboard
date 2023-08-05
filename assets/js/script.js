@@ -95,7 +95,7 @@ $(document).ready(function () {
 
     // use Day.js to convert the timestamp into a readable date
     function formatDate(timestamp) {
-        return dayjs(timestamp * 1000).format('MM • DD • YYYY')
+        return dayjs(timestamp * 1000).format('dddd, MM • DD • YYYY')
     }
 
     // prints data on the page with weather data
@@ -103,7 +103,7 @@ function printWeather(sixDayWeatherData, name) {
     $('#right-side').removeClass("hidden"); // unhides the right-side div
     // prints current weather data into the "Current Forecast" card
     $('#current-city').text(name)
-    $('#current-date').text(' // ' + sixDayWeatherData[0].date + ' // ')
+    $('#current-date').text(' ━ ' + sixDayWeatherData[0].date + ' ━ ')
     $('#current-weather').attr("src", sixDayWeatherData[0].iconURL)
     $('#current-desc').text(sixDayWeatherData[0].description)
     $('#current-temp').text(sixDayWeatherData[0].temperature + '°F')
