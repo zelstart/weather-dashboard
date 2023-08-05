@@ -8,7 +8,7 @@ $(document).ready(function () {
     if (storedHistory) {
         searchHistoryList = JSON.parse(storedHistory);
     }
-    updateSearchHistory() // run updateSearchHistory function to put buttons for searches stored in localStorage
+    updateSearchHistory() // run updateSearchHistory function to make buttons for searches stored in localStorage
 
         // adds the latest search to searchHistoryList, storing only the 9 most recent searches
         function saveSearch(searchBarText) {
@@ -30,7 +30,7 @@ $(document).ready(function () {
             for (var i = 0; i < searchHistoryList.length; i++) {
                 // would like to add an if statement that stops empty or invalid values from going through
                 var searchItem = searchHistoryList[i];
-                var historyButton = $('<button>').text(searchItem).addClass('btn cstm-btn-2');
+                var historyButton = $('<button>').text(searchItem).addClass('btn cstm-btn-2 history-button');
                 $('#search-history').append(historyButton);
             }
         }
@@ -50,6 +50,11 @@ $(document).ready(function () {
         if (event.keyCode === 13) {
             $('#search-button').click();
         }
+    })
+
+    $('.history-button').click(function(event) { // search history buttons should update weather data when clicked
+        var historySearchTarget = event.target.textContent// grabs the text from the button clicked
+        fetchCityCoord(historySearchTarget)
     })
 
     // grab coordinates for user-entered city to use in fetchWeather function
@@ -74,7 +79,6 @@ $(document).ready(function () {
                 alert("Could not fetch coordinates for city -- please try again");
             }
         });
-
     }
 
     // grab weather data
@@ -119,7 +123,6 @@ $(document).ready(function () {
             error: function (error) {
                 console.log("There was an error while fetching weather data, please try again.")
             }
-
         })
     }
 
@@ -142,7 +145,7 @@ function printWeather(sixDayWeatherData, name) {
 
     // for each item after 0 (current day), add a card to the 5-day forecast
     var forecastCard = $('<div>').addClass('col-lg-2 col-4 cstm-card-bg p-2 card-shadow mx-3 mb-3 rounded')
-
+    
 }
 
 
