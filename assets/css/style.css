@@ -105,6 +105,10 @@
     display: none;
   }
 
+  .center {
+    text-align: center;
+  }
+
   .bold {
     color: var(--light2);
     font-weight: 700;
