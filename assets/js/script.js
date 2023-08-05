@@ -18,7 +18,7 @@ $(document).ready(function () {
             } else {
                 searchHistoryList.unshift(searchBarText); // add new item to the front of the array
             }
-            console.log(searchHistoryList) // should only have 9 most recent searches
+            // console.log(searchHistoryList) // should only have 9 most recent searches
             var storeHistory = JSON.stringify(searchHistoryList); // save the list to localStorage
             localStorage.setItem('searchHistoryList', storeHistory);
             updateSearchHistory();
@@ -26,7 +26,7 @@ $(document).ready(function () {
     
         // create buttons for each item on the searchHistoryList
         function updateSearchHistory() {
-            $('#search-history').empty();
+            $('#search-history').empty(); // remove everything from search history so it doesn't duplicate the history buttons
             for (var i = 0; i < searchHistoryList.length; i++) {
                 // would like to add an if statement that stops empty or invalid values from going through
                 var searchItem = searchHistoryList[i];
@@ -37,12 +37,19 @@ $(document).ready(function () {
 
     // when search button is clicked, city name is saved as a variable and textarea is cleared
     $('#search-button').click(function () {
-        var searchBarText = $('#search-bar').val().toLowerCase().trim();
+        // split search-bar text at comma
+        var searchBarText = $('#search-bar').val().toLowerCase().split(',');
+        var cityName = searchBarText[0].trim();
+        // if a second item exists in searchBarText, trim whitespace
+        if (searchBarText[1]) {
+        var state = searchBarText[1].trim();
+    }
 
         $('#search-bar').val("");
-        saveSearch(searchBarText);
+        // saveSearch(searchBarText);
         updateSearchHistory();
-        fetchCityCoord(searchHistoryList)
+        fetchCityCoord(cityName, state); // passes the cityname and zipcode as an argument to our fetchCityCoord function
+
     })
 
     // add a keydown listener for search bar so that hitting the enter key has the same effect as hitting the submit button
@@ -53,13 +60,23 @@ $(document).ready(function () {
     })
 
     $('.history-button').click(function(event) { // search history buttons should update weather data when clicked
-        var historySearchTarget = event.target.textContent// grabs the text from the button clicked
+        var historySearchTarget = event.target.textContent.split(',')// grabs the text from the button clicked
+
+        var cityName = historySearchTarget[0].trim();
+        var state = historySearchTarget[1].trim();
+
         fetchCityCoord(historySearchTarget)
     })
 
     // grab coordinates for user-entered city to use in fetchWeather function
-    function fetchCityCoord(cityName) {
-        var cityQueryURL = "https://api.openweathermap.org/geo/1.0/direct?q=" + cityName + "&appid=7a0c14487898bae146a1b3a3863031d0";
+    function fetchCityCoord(cityName, state) {
+        var cityQueryURL = "https://api.openweathermap.org/geo/1.0/direct?q=" + cityName;
+        // if the user included a state in their entry, it will be used in the query URL
+        if (state) { 
+            cityQueryURL += "," + state + ",US"
+        }
+        cityQueryURL += "&appid=7a0c14487898bae146a1b3a3863031d0"
+
         console.log(cityQueryURL) // checking to make sure it's grabbing the right name
         $.ajax({
             url: cityQueryURL,
@@ -69,14 +86,21 @@ $(document).ready(function () {
                 var lon = coordResponse[0].lon;
                 var name = coordResponse[0].name;
                 console.log(lat, lon, name) // checking to make sure coords are correct
+                if (coordResponse.length > 0) {
                 var forecastQueryURL = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=7a0c14487898bae146a1b3a3863031d0&units=imperial" // create the url that we'll use in fetchWeather, convert units to imperial 
-                fetchWeather(forecastQueryURL, name) // if the call has been successful, fetchWeather function will run. we're passing forecastQueryURL as an argument so we can access it in our called function
+                fetchWeather(forecastQueryURL, name) // if the call has been successful, fetchWeather function will run. we're passing forecastQueryURL and name as an argument so we can access them in our called function
+                saveSearch(cityName + (state ? (", " + state) : ""));
+                updateSearchHistory();
+            } else {
+                console.log("Could not fetch coordinates for city -- please try again", error);
+                alert("Could not fetch coordinates for city -- please try again");
+            } 
+            
             },
             error: function (error) { 
                 // can't get this to work how I want. only triggers when search bar is submitted empty.
                 // want it to trigger if the city name is not valid. not sure how to do that without having a gigantic array containing all of the city names
                 console.log("Could not fetch coordinates for city -- please try again", error);
-                alert("Could not fetch coordinates for city -- please try again");
             }
         });
     }
@@ -144,8 +168,9 @@ function printWeather(sixDayWeatherData, name) {
     $('#current-humidity').text(sixDayWeatherData[0].humidity + '%')
 
     // for each item after 0 (current day), add a card to the 5-day forecast
-    var forecastCard = $('<div>').addClass('col-lg-2 col-4 cstm-card-bg p-2 card-shadow mx-3 mb-3 rounded')
-    
+    var forecastCard = $('<div>').addClass('col-lg-2 col-8 cstm-card-bg p-2 card-shadow mx-3 mb-3 rounded')
+    // for (var i = 1; i < sixDayWeatherData.length; i++)
+
 }
 
 
