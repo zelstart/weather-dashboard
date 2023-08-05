@@ -62,7 +62,7 @@ $(document).ready(function () {
     $('#search-history').on('click', '.history-button', function(event) { // search history buttons should update weather data when clicked
         var historySearchTarget = event.target.textContent.split(',')// grabs the text from the button clicked
         var cityName = historySearchTarget[0].trim();
-        if (historySearchTarget[1]) {
+        if (historySearchTarget[1]) { // if a second item exists in this array, trim it
         var state = historySearchTarget[1].trim();
     }
         fetchCityCoord(cityName, state)
