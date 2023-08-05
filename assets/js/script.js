@@ -59,14 +59,14 @@ $(document).ready(function () {
         }
     })
 
-    $('.history-button').click(function(event) { // search history buttons should update weather data when clicked
+    $('#search-history').on('click', '.history-button', function(event) { // search history buttons should update weather data when clicked
         var historySearchTarget = event.target.textContent.split(',')// grabs the text from the button clicked
-
         var cityName = historySearchTarget[0].trim();
+        if (historySearchTarget[1]) {
         var state = historySearchTarget[1].trim();
-
-        fetchCityCoord(historySearchTarget)
-    })
+    }
+        fetchCityCoord(cityName, state)
+    });
 
     // grab coordinates for user-entered city to use in fetchWeather function
     function fetchCityCoord(cityName, state) {
