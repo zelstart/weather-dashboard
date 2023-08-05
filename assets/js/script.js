@@ -3,6 +3,38 @@ $(document).ready(function () {
 
     var searchHistoryList = [];
 
+    // check localStorage for search history
+    var storedHistory = localStorage.getItem('searchHistoryList');
+    if (storedHistory) {
+        searchHistoryList = JSON.parse(storedHistory);
+    }
+    updateSearchHistory() // run updateSearchHistory function to put buttons for searches stored in localStorage
+
+        // adds the latest search to searchHistoryList, storing only the 9 most recent searches
+        function saveSearch(searchBarText) {
+            if (searchHistoryList.length === 9) { // check for an array already the max length we want
+                searchHistoryList.pop(); // remove last item in array
+                searchHistoryList.unshift(searchBarText); // add new item to the front of the array
+            } else {
+                searchHistoryList.unshift(searchBarText); // add new item to the front of the array
+            }
+            console.log(searchHistoryList) // should only have 9 most recent searches
+            var storeHistory = JSON.stringify(searchHistoryList); // save the list to localStorage
+            localStorage.setItem('searchHistoryList', storeHistory);
+            updateSearchHistory();
+        }
+    
+        // create buttons for each item on the searchHistoryList
+        function updateSearchHistory() {
+            $('#search-history').empty();
+            for (var i = 0; i < searchHistoryList.length; i++) {
+                // would like to add an if statement that stops empty or invalid values from going through
+                var searchItem = searchHistoryList[i];
+                var historyButton = $('<button>').text(searchItem).addClass('btn cstm-btn-2');
+                $('#search-history').append(historyButton);
+            }
+        }
+
     // when search button is clicked, city name is saved as a variable and textarea is cleared
     $('#search-button').click(function () {
         var searchBarText = $('#search-bar').val().toLowerCase().trim();
@@ -18,9 +50,7 @@ $(document).ready(function () {
         if (event.keyCode === 13) {
             $('#search-button').click();
         }
-
     })
-
 
     // grab coordinates for user-entered city to use in fetchWeather function
     function fetchCityCoord(cityName) {
@@ -113,34 +143,9 @@ function printWeather(sixDayWeatherData, name) {
     // for each item after 0 (current day), add a card to the 5-day forecast
     var forecastCard = $('<div>').addClass('col-lg-2 col-4 cstm-card-bg p-2 card-shadow mx-3 mb-3 rounded')
 
-
 }
 
 
-
-
-
-    // adds the latest search to searchHistoryList, storing only the 9 most recent searches
-    function saveSearch(searchBarText) {
-        if (searchHistoryList.length === 9) { // check for an array already the max length we want
-            searchHistoryList.pop(); // remove last item in array
-            searchHistoryList.unshift(searchBarText); // add new item to the front of the array
-        } else {
-            searchHistoryList.unshift(searchBarText); // add new item to the front of the array
-        }
-        console.log(searchHistoryList) // should only have 9 most recent searches
-    }
-
-    // create buttons for each item on the searchHistoryList
-    function updateSearchHistory() {
-        $('#search-history').empty();
-        for (var i = 0; i < searchHistoryList.length; i++) {
-            // would like to add an if statement that stops empty or invalid values from going through
-            var searchItem = searchHistoryList[i];
-            var historyButton = $('<button>').text(searchItem).addClass('btn cstm-btn-2');
-            $('#search-history').append(historyButton);
-        }
-    }
 
 
 
