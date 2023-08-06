@@ -28,7 +28,7 @@ $(document).ready(function () {
     function updateSearchHistory() {
         $('#search-history').empty(); // remove everything from search history so it doesn't duplicate the history buttons
         for (var i = 0; i < searchHistoryList.length; i++) {
-            // would like to add an if statement that stops empty or invalid values from going through
+            // i think i need to add something that will not let empty or invalid cities from being saved, as well as duplicates.
             var searchItem = searchHistoryList[i];
             var historyButton = $('<button>').text(searchItem).addClass('btn cstm-btn-2 history-button');
             $('#search-history').append(historyButton);
@@ -40,13 +40,12 @@ $(document).ready(function () {
         // split search-bar text at comma
         var searchBarText = $('#search-bar').val().toLowerCase().split(',');
         var cityName = searchBarText[0].trim();
-        // if a second item exists in searchBarText, trim whitespace
+        // if a second item exists in searchBarText, trim whitespace on it
         if (searchBarText[1]) {
             var state = searchBarText[1].trim();
         }
 
         $('#search-bar').val("");
-        // saveSearch(searchBarText);
         updateSearchHistory();
         fetchCityCoord(cityName, state); // passes the cityname and zipcode as an argument to our fetchCityCoord function
 
@@ -65,7 +64,7 @@ $(document).ready(function () {
         if (historySearchTarget[1]) { // if a second item exists in this array, trim it
             var state = historySearchTarget[1].trim();
         }
-        fetchCityCoord(cityName, state)
+        fetchCityCoord(cityName, state) // pass our variables to the fetch function
     });
 
     // grab coordinates for user-entered city to use in fetchWeather function
@@ -85,8 +84,8 @@ $(document).ready(function () {
                 var lat = coordResponse[0].lat;
                 var lon = coordResponse[0].lon;
                 var name = coordResponse[0].name;
-                console.log(lat, lon, name) // checking to make sure coords are correct
-                if (coordResponse.length > 0) {
+                console.log(lat, lon, name) // checking to make sure variables are correct
+                if (coordResponse.length > 0) { // ATTEMPT to make it give us an error if user didn't enter valid data.
                     var forecastQueryURL = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=7a0c14487898bae146a1b3a3863031d0&units=imperial" // create the url that we'll use in fetchWeather, convert units to imperial 
                     fetchWeather(forecastQueryURL, name) // if the call has been successful, fetchWeather function will run. we're passing forecastQueryURL and name as an argument so we can access them in our called function
                     saveSearch(cityName + (state ? (", " + state) : ""));
@@ -95,11 +94,8 @@ $(document).ready(function () {
                     console.log("Could not fetch coordinates for city -- please try again", error);
                     alert("Could not fetch coordinates for city -- please try again");
                 }
-
             },
             error: function (error) {
-                // can't get this to work how I want. only triggers when search bar is submitted empty.
-                // want it to trigger if the city name is not valid. not sure how to do that without having a gigantic array containing all of the city names
                 console.log("Could not fetch coordinates for city -- please try again", error);
             }
         });
@@ -116,10 +112,10 @@ $(document).ready(function () {
                     // but because the timestamps are every three hours and not daily, it's giving
                     // me the same day multiple times instead of a new day in each obj
                     // solutions? but not sure of the syntax to implement
-                    // tell it to check for duplicate days - keep looping until we get 6 unique dates
-                    // only save the results that have a timestamp that contains 12pm 
-                    // would rather it be based on the current time rather than a static noon, but i can't think of how that would be written
-                    // give in and purchase a dang subscription for the opencall api instead
+                        // tell it to check for duplicate days - keep looping until we get 6 unique dates
+                        // only save the results that have a timestamp that contains 12pm 
+                            // would rather it be based on the current time rather than a static noon, but i can't think of how that would be written
+                        // give in and purchase a dang subscription for the opencall api instead
                     var timestamp = weatherResponse.list[i].dt; // date timestamp -- will need to convert to mm/dd/yyyy format with dayjs
                     var date = formatDate(timestamp); // convert timestamp with function using dayjs
                     var icon = weatherResponse.list[i].weather[0].icon; // weather icon
@@ -191,10 +187,5 @@ $(document).ready(function () {
         $('#icon-4').attr('src', sixDayWeatherData[4].iconURL)
         $('#icon-5').attr('src', sixDayWeatherData[5].iconURL)
     }
-
-
-
-
-
 
 })
