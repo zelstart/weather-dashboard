@@ -171,14 +171,14 @@ $(document).ready(function () {
         // for each item after 0 (current day), add a card to the 5-day forecast
         for (var i = 1; i < sixDayWeatherData.length; i++) {
             //create card div
-            var forecastCard = $('<div>').addClass('col-lg-2 col-8 cstm-card-bg p-2 card-shadow mx-3 mb-3 rounded')
+            var forecastCard = $('<div>').addClass('col-lg-2 col-8 cstm-card-bg p-3 card-shadow mx-3 mb-3 rounded')
             // create card elements
             var dateEl = $('<p>').addClass('forecast-item').text(sixDayWeatherData[i].date);
             var iconEl = $('<img>').addClass('forecast-item').attr('id','icon-' + i);
             var iconContainer = $('<p>').addClass('forecast-item').append(iconEl);
-            var tempEl = $('<p>').addClass('forecast-item').text('Temp:').append($('<span>'+ sixDayWeatherData[i].temperature + '°F' + '</span>'));
-            var windEl = $('<p>').addClass('forecast-item').text('Wind:').append($('<span>'+ sixDayWeatherData[i].wind + 'mph' + '</span>'));
-            var humidityEl = $('<p>').addClass('forecast-item').text('Humidity:').append($('<span>'+ sixDayWeatherData[i].humidity + '%' + '</span>'));
+            var tempEl = $('<p>').addClass('forecast-item').text('Temp: ').append($('<span>'+ sixDayWeatherData[i].temperature + '°F' + '</span>'));
+            var windEl = $('<p>').addClass('forecast-item').text('Wind: ').append($('<span>'+ sixDayWeatherData[i].wind + 'mph' + '</span>'));
+            var humidityEl = $('<p>').addClass('forecast-item').text('Humidity: ').append($('<span>'+ sixDayWeatherData[i].humidity + '%' + '</span>'));
            
             // append the card to the page, and then append all of the card body's elements inside of it
             $('#five-day-forecast').append(forecastCard);
