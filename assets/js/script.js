@@ -140,7 +140,6 @@ $(document).ready(function () {
                         humidity: humidity,
                     }
                     sixDayWeatherData.push(dailyWeatherData); // add the six objects to the variable we created above
-                   
                 }
                 printWeather(sixDayWeatherData, name); // pass our weather data to printWeather function and run it
                 console.log(sixDayWeatherData) // to check if we're getting the dates we want
@@ -175,16 +174,22 @@ $(document).ready(function () {
             var forecastCard = $('<div>').addClass('col-lg-2 col-8 cstm-card-bg p-2 card-shadow mx-3 mb-3 rounded')
             // create card elements
             var dateEl = $('<p>').addClass('forecast-item').text(sixDayWeatherData[i].date);
-            var iconEl = $('<img>').addClass('forecast-item').attr("src", sixDayWeatherData[i].icon);
-            var iconContainer = $('<p>').addClass('forecast-item').append(iconEl)
+            var iconEl = $('<img>').addClass('forecast-item').attr('id','icon-' + i);
+            var iconContainer = $('<p>').addClass('forecast-item').append(iconEl);
             var tempEl = $('<p>').addClass('forecast-item').text('Temp:').append($('<span>'+ sixDayWeatherData[i].temperature + '°F' + '</span>'));
             var windEl = $('<p>').addClass('forecast-item').text('Wind:').append($('<span>'+ sixDayWeatherData[i].wind + 'mph' + '</span>'));
             var humidityEl = $('<p>').addClass('forecast-item').text('Humidity:').append($('<span>'+ sixDayWeatherData[i].humidity + '%' + '</span>'));
            
+            // append the card to the page, and then append all of the card body's elements inside of it
             $('#five-day-forecast').append(forecastCard);
             forecastCard.append(dateEl).append($('<p>').append(iconContainer)).append(tempEl).append(windEl).append(humidityEl);
         }
-
+    // the only way I could get the icons to load properly 
+        $('#icon-1').attr('src', sixDayWeatherData[1].iconURL)
+        $('#icon-2').attr('src', sixDayWeatherData[2].iconURL)
+        $('#icon-3').attr('src', sixDayWeatherData[3].iconURL)
+        $('#icon-4').attr('src', sixDayWeatherData[4].iconURL)
+        $('#icon-5').attr('src', sixDayWeatherData[5].iconURL)
     }
 
 
