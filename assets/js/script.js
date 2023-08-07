@@ -75,7 +75,7 @@ $(document).ready(function () {
 
     // grab coordinates for user-entered city to use in fetchForecast function
     function fetchCityCoord(cityName, state) {
-    
+
         let cityQueryURL = "https://api.openweathermap.org/geo/1.0/direct?q=";
         if (state) {
             cityQueryURL += `${cityName},${state},US`;
@@ -91,13 +91,15 @@ $(document).ready(function () {
             method: "GET",
             success: function (coordResponse) { // if the call is successful, we need to save the coords 
                 if (coordResponse.length > 0) { // ATTEMPT to make it give us an error if user didn't enter valid data.
-                let lat = coordResponse[0].lat;
-                let lon = coordResponse[0].lon;
-                let name = coordResponse[0].name;
-                console.log(lat, lon, name) // checking to make sure variables are correct
+                    let lat = coordResponse[0].lat;
+                    let lon = coordResponse[0].lon;
+                    let name = coordResponse[0].name;
+                    let stateName = coordResponse[0].state;
+                    console.log(coordResponse)
+                    console.log(lat, lon, name, stateName) // checking to make sure variables are correct
                     let forecastQueryURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=7a0c14487898bae146a1b3a3863031d0&units=imperial` // create the url that we'll use in fetchForecast, convert units to imperial 
                     fetchForecast(forecastQueryURL, name) // if the call has been successful, fetchForecast function will run. we're passing forecastQueryURL and name as an argument so we can access them in our called function
-                    fetchCurrent(forecastQueryURL, name)
+                    fetchCurrent(forecastQueryURL, name, stateName)
                     saveSearch(cityName + (state ? (", " + state) : ""));
                     updateSearchHistory();
                 } else {
@@ -112,37 +114,41 @@ $(document).ready(function () {
     }
 
     // fetches current weather and prints it to the page
-    function fetchCurrent(forecastQueryURL, name) {
+    function fetchCurrent(forecastQueryURL, name, stateName) {
         $.ajax({
             url: forecastQueryURL,
             method: "GET",
             success: function (weatherResponse) {
                 console.log(weatherResponse)
-                    let timestamp = weatherResponse.list[0].dt;
-                    let date = formatDate(timestamp); // convert timestamp with function using dayjs
-                    let icon = weatherResponse.list[0].weather[0].icon; // weather icon
-                    let iconURL = "http://openweathermap.org/img/wn/" + icon + ".png" // need to make the img url for the icon
-                    let desc = weatherResponse.list[0].weather[0].description; // weather desc
-                    let temp = weatherResponse.list[0].main.temp; // temperature 
-                    let wind = weatherResponse.list[0].wind.speed // wind speed
-                    let humidity = weatherResponse.list[0].main.humidity; // humidity
 
-                    $('#right-side').removeClass("hidden"); // unhides the right-side div
-                    // prints current weather data into the "Current Forecast" card
-                    $('#current-city').text(name)
-                    $('#current-date').text(' ━ ' + date + ' ━ ')
-                    $('#current-weather').attr("src", iconURL)
-                    $('#current-desc').text(desc)
-                    $('#current-temp').text(temp + '°F')
-                    $('#current-wind').text(wind + 'mph')
-                    $('#current-humidity').text(humidity + '%')
+                let timestamp = weatherResponse.list[0].dt;
+                let date = formatDate(timestamp); // convert timestamp with function using dayjs
+                let icon = weatherResponse.list[0].weather[0].icon; // weather icon
+                let iconURL = "http://openweathermap.org/img/wn/" + icon + ".png" // need to make the img url for the icon
+                let desc = weatherResponse.list[0].weather[0].description; // weather desc
+                let temp = weatherResponse.list[0].main.temp; // temperature 
+                let wind = weatherResponse.list[0].wind.speed // wind speed
+                let humidity = weatherResponse.list[0].main.humidity; // humidity
+
+                $('#right-side').removeClass("hidden"); // unhides the right-side div
+                // prints current weather data into the "Current Forecast" card
+                $('#current-city').text(name)
+                $('#current-state').text(`, ${stateName}`)
+                $('#current-date').text(` ━  ${date}  ━ `)
+                $('#current-weather').attr("src", iconURL)
+                $('#current-desc').text(desc)
+                $('#current-temp').text(`${temp} °F`)
+                $('#current-wind').text(`${wind} mph`)
+                $('#current-humidity').text(`${humidity} %`)
+
+
             },
             error: function (error) {
                 console.log("There was an error while fetching weather data, please try again.")
             }
         })
     }
-    
+
     // fetches forecast of the next 5 days and prints it to the page
     function fetchForecast(forecastQueryURL, name) {
         $.ajax({
@@ -150,7 +156,7 @@ $(document).ready(function () {
             method: "GET",
             success: function (weatherResponse) {
                 let fiveDayWeatherData = []; // an empty container to store the weather data for 5 days
-                for (let i = 5; i < 40; i += 8) { 
+                for (let i = 5; i < 40; i += 8) {
 
                     let timestamp = weatherResponse.list[i].dt;
                     let date = formatDate(timestamp); // convert timestamp with function using dayjs
@@ -160,7 +166,7 @@ $(document).ready(function () {
                     let temp = weatherResponse.list[i].main.temp; // temperature 
                     let wind = weatherResponse.list[i].wind.speed // wind speed
                     let humidity = weatherResponse.list[i].main.humidity; // humidity
-                    
+
                     let dailyWeatherData = { // make a new object containing info for each day made in the loop. 
                         timestamp: timestamp,
                         date: date,
@@ -199,5 +205,5 @@ $(document).ready(function () {
     function formatDate(timestamp) {
         return dayjs(timestamp * 1000).format('ddd, MM • DD • YYYY')
     }
-    
+
 })
