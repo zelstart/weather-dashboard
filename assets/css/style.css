@@ -50,10 +50,12 @@
 
   .cstm-h3 {
     font-weight: 700;
+    font-size: 1.4;
+    margin: 0px;
   }
 
   .card-header-text {
-    font-size: 1.4em;
+    font-size: 1.3em;
     color: var(--light2)
   }
 
@@ -86,10 +88,6 @@
     background-color: var(--acc2-25);
     color: var(--light2);
   }
-  /* .round-top {
-    border-top-left-radius: 10px;
-    border-top-right-radius: 10px;
-  } */
 
   .btn:focus {
     outline: none;
@@ -125,5 +123,9 @@
 
   .current {
     font-size: 1.4em;
+  }
+
+  p, hr {
+    margin: 0px;
   }
 
