@@ -17,7 +17,7 @@ $(document).ready(function () {
             searchHistoryList.pop(); // remove last item in array
             searchHistoryList.unshift(cityName); // add new item to the front of the array
         } else {
-            if (searchHistoryList.indexOf(cityName) === -1) {
+            if (searchHistoryList.indexOf(cityName) === -1) { // checks for duplicate entries
                 searchHistoryList.unshift(cityName); // add new item to the front of the array
             }
         }
@@ -48,7 +48,6 @@ $(document).ready(function () {
             let state = searchBarText[1].trim();
             fetchCityCoord(cityName, state); // passes the cityname and zipcode as an argument to our fetchCityCoord function
         }
-
         $('#search-bar').val("");
         updateSearchHistory();
 
@@ -70,7 +69,7 @@ $(document).ready(function () {
         }
     });
 
-    // grab coordinates for user-entered city to use in fetchWeather function
+    // grab coordinates for user-entered city to use in fetchForecast function
     function fetchCityCoord(cityName, state) {
         let cityQueryURL = "https://api.openweathermap.org/geo/1.0/direct?q=" + cityName;
         // if the user included a state in their entry, it will be used in the query URL
@@ -79,7 +78,8 @@ $(document).ready(function () {
         }
         cityQueryURL += "&appid=7a0c14487898bae146a1b3a3863031d0"
 
-        console.log(cityQueryURL) // checking to make sure it's grabbing the right name
+
+        // get coordinates
         $.ajax({
             url: cityQueryURL,
             method: "GET",
@@ -89,8 +89,9 @@ $(document).ready(function () {
                 let name = coordResponse[0].name;
                 console.log(lat, lon, name) // checking to make sure variables are correct
                 if (coordResponse.length > 0) { // ATTEMPT to make it give us an error if user didn't enter valid data.
-                    let forecastQueryURL = "https://api.openweathermap.org/data/2.5/forecast?lat=" + lat + "&lon=" + lon + "&appid=7a0c14487898bae146a1b3a3863031d0&units=imperial" // create the url that we'll use in fetchWeather, convert units to imperial 
-                    fetchWeather(forecastQueryURL, name) // if the call has been successful, fetchWeather function will run. we're passing forecastQueryURL and name as an argument so we can access them in our called function
+                    let forecastQueryURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=7a0c14487898bae146a1b3a3863031d0&units=imperial` // create the url that we'll use in fetchForecast, convert units to imperial 
+                    fetchForecast(forecastQueryURL, name) // if the call has been successful, fetchForecast function will run. we're passing forecastQueryURL and name as an argument so we can access them in our called function
+                    fetchCurrent(forecastQueryURL, name)
                     saveSearch(cityName + (state ? (", " + state) : ""));
                     updateSearchHistory();
                     console
@@ -105,22 +106,48 @@ $(document).ready(function () {
         });
     }
 
-    // grab weather data
-    function fetchWeather(forecastQueryURL, name) {
+    // fetches current weather and prints it to the page
+    function fetchCurrent(forecastQueryURL, name) {
         $.ajax({
             url: forecastQueryURL,
             method: "GET",
             success: function (weatherResponse) {
-                let sixDayWeatherData = []; // an empty container to store the weather data for six days
-                for (let i = 5; i < 40; i += 8) { // BUG: I only need 6 days worth of data.
-                    // but because the timestamps are every three hours and not daily, it's giving
-                    // me the same day multiple times instead of a new day in each obj
-                    // solutions? but not sure of the syntax to implement
-                    // tell it to check for duplicate days - keep looping until we get 6 unique dates
-                    // only save the results that have a timestamp that contains 12pm 
-                    // would rather it be based on the current time rather than a static noon, but i can't think of how that would be written
-                    // give in and purchase a dang subscription for the opencall api instead
-                    let timestamp = weatherResponse.list[i].dt; // date timestamp -- will need to convert to mm/dd/yyyy format with dayjs
+                console.log(weatherResponse)
+                    let timestamp = weatherResponse.list[0].dt;
+                    let date = formatDate(timestamp); // convert timestamp with function using dayjs
+                    let icon = weatherResponse.list[0].weather[0].icon; // weather icon
+                    let iconURL = "http://openweathermap.org/img/wn/" + icon + ".png" // need to make the img url for the icon
+                    let desc = weatherResponse.list[0].weather[0].description; // weather desc
+                    let temp = weatherResponse.list[0].main.temp; // temperature 
+                    let wind = weatherResponse.list[0].wind.speed // wind speed
+                    let humidity = weatherResponse.list[0].main.humidity; // humidity
+
+                    $('#right-side').removeClass("hidden"); // unhides the right-side div
+                    // prints current weather data into the "Current Forecast" card
+                    $('#current-city').text(name)
+                    $('#current-date').text(' ━ ' + date + ' ━ ')
+                    $('#current-weather').attr("src", iconURL)
+                    $('#current-desc').text(desc)
+                    $('#current-temp').text(temp + '°F')
+                    $('#current-wind').text(wind + 'mph')
+                    $('#current-humidity').text(humidity + '%')
+            },
+            error: function (error) {
+                console.log("There was an error while fetching weather data, please try again.")
+            }
+        })
+    }
+    
+    // fetches forecast of the next 5 days and prints it to the page
+    function fetchForecast(forecastQueryURL, name) {
+        $.ajax({
+            url: forecastQueryURL,
+            method: "GET",
+            success: function (weatherResponse) {
+                let fiveDayWeatherData = []; // an empty container to store the weather data for 5 days
+                for (let i = 5; i < 40; i += 8) { 
+
+                    let timestamp = weatherResponse.list[i].dt;
                     let date = formatDate(timestamp); // convert timestamp with function using dayjs
                     let icon = weatherResponse.list[i].weather[0].icon; // weather icon
                     let iconURL = "http://openweathermap.org/img/wn/" + icon + ".png" // need to make the img url for the icon
@@ -128,9 +155,8 @@ $(document).ready(function () {
                     let temp = weatherResponse.list[i].main.temp; // temperature 
                     let wind = weatherResponse.list[i].wind.speed // wind speed
                     let humidity = weatherResponse.list[i].main.humidity; // humidity
-
+                    
                     let dailyWeatherData = { // make a new object containing info for each day made in the loop. 
-                        // BUG: currently does not make a new object for each day, but for every 3 hours. 
                         timestamp: timestamp,
                         date: date,
                         iconURL: iconURL,
@@ -139,10 +165,24 @@ $(document).ready(function () {
                         wind: wind,
                         humidity: humidity,
                     }
-                    sixDayWeatherData.push(dailyWeatherData); // add the six objects to the variable we created above
+                    fiveDayWeatherData.push(dailyWeatherData); // add the six objects to the variable we created above
+                } // creates a new card containing each of the 5 days' data
+                for (let i = 0; i < fiveDayWeatherData.length; i++) {
+                    //create card div
+                    let forecastCard = $('<div>').addClass('col-lg-2 col-8 cstm-card-bg p-3 card-shadow mx-3 mb-3 rounded')
+                    // create card elements
+                    let dateEl = $('<p>').addClass('forecast-item').text(fiveDayWeatherData[i].date);
+                    // let iconEl = $('<img>').addClass('forecast-item').attr('id', 'icon-' + i);
+                    let iconEl = $('<img>').addClass('forecast-item').attr('id', `icon-${i}`).attr('src', fiveDayWeatherData[i].iconURL);
+                    let iconContainer = $('<p>').addClass('forecast-item').append(iconEl);
+                    let tempEl = $('<p>').addClass('forecast-item').text('Temp: ').append($('<span>' + fiveDayWeatherData[i].temperature + '°F' + '</span>'));
+                    let windEl = $('<p>').addClass('forecast-item').text('Wind: ').append($('<span>' + fiveDayWeatherData[i].wind + 'mph' + '</span>'));
+                    let humidityEl = $('<p>').addClass('forecast-item').text('Humidity: ').append($('<span>' + fiveDayWeatherData[i].humidity + '%' + '</span>'));
+                    // append the card to the page, and then append all of the card body's elements inside of it
+                    $('#five-day-forecast').append(forecastCard);
+                    forecastCard.append(dateEl).append($('<p>').append(iconContainer)).append(tempEl).append(windEl).append(humidityEl);
                 }
-                printWeather(sixDayWeatherData, name); // pass our weather data to printWeather function and run it
-                console.log(sixDayWeatherData) // to check if we're getting the dates we want
+                // printWeather(fiveDayWeatherData, name); // pass our weather data to printWeather function and run it
             },
             error: function (error) {
                 console.log("There was an error while fetching weather data, please try again.")
@@ -155,36 +195,5 @@ $(document).ready(function () {
         return dayjs(timestamp * 1000).format('dddd, MM • DD • YYYY')
     }
 
-    // prints data on the page with weather data
-    function printWeather(sixDayWeatherData, name) {
-        console.log(sixDayWeatherData)
-        $('#right-side').removeClass("hidden"); // unhides the right-side div
-        // prints current weather data into the "Current Forecast" card
-        $('#current-city').text(name)
-        $('#current-date').text(' ━ ' + sixDayWeatherData[0].date + ' ━ ')
-        $('#current-weather').attr("src", sixDayWeatherData[0].iconURL)
-        $('#current-desc').text(sixDayWeatherData[0].description)
-        $('#current-temp').text(sixDayWeatherData[0].temperature + '°F')
-        $('#current-wind').text(sixDayWeatherData[0].wind + 'mph')
-        $('#current-humidity').text(sixDayWeatherData[0].humidity + '%')
-
-        // for each item after 0 (current day), add a card to the 5-day forecast
-        for (let i = 1; i < sixDayWeatherData.length; i++) {
-            //create card div
-            let forecastCard = $('<div>').addClass('col-lg-2 col-8 cstm-card-bg p-3 card-shadow mx-3 mb-3 rounded')
-            // create card elements
-            let dateEl = $('<p>').addClass('forecast-item').text(sixDayWeatherData[i].date);
-            // let iconEl = $('<img>').addClass('forecast-item').attr('id', 'icon-' + i);
-            let iconEl = $('<img>').addClass('forecast-item').attr('id', `icon-${i}`).attr('src', sixDayWeatherData[i].iconURL);
-            let iconContainer = $('<p>').addClass('forecast-item').append(iconEl);
-            let tempEl = $('<p>').addClass('forecast-item').text('Temp: ').append($('<span>' + sixDayWeatherData[i].temperature + '°F' + '</span>'));
-            let windEl = $('<p>').addClass('forecast-item').text('Wind: ').append($('<span>' + sixDayWeatherData[i].wind + 'mph' + '</span>'));
-            let humidityEl = $('<p>').addClass('forecast-item').text('Humidity: ').append($('<span>' + sixDayWeatherData[i].humidity + '%' + '</span>'));
-
-            // append the card to the page, and then append all of the card body's elements inside of it
-            $('#five-day-forecast').append(forecastCard);
-            forecastCard.append(dateEl).append($('<p>').append(iconContainer)).append(tempEl).append(windEl).append(humidityEl);
-        }
-    }
 
 })
