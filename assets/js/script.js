@@ -192,7 +192,7 @@ $(document).ready(function () {
 
     // use Day.js to convert the timestamp into a readable date
     function formatDate(timestamp) {
-        return dayjs(timestamp * 1000).format('dddd, MM • DD • YYYY')
+        return dayjs(timestamp * 1000).format('ddd, MM • DD • YYYY')
     }
 
 
