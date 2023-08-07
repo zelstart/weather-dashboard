@@ -167,6 +167,7 @@ $(document).ready(function () {
                     }
                     fiveDayWeatherData.push(dailyWeatherData); // add the six objects to the variable we created above
                 } // creates a new card containing each of the 5 days' data
+                $('#five-day-forecast').empty();
                 for (let i = 0; i < fiveDayWeatherData.length; i++) {
                     //create card div
                     let forecastCard = $('<div>').addClass('col-lg-2 col-8 cstm-card-bg p-3 card-shadow mx-3 mb-3 rounded')
@@ -182,7 +183,6 @@ $(document).ready(function () {
                     $('#five-day-forecast').append(forecastCard);
                     forecastCard.append(dateEl).append($('<p>').append(iconContainer)).append(tempEl).append(windEl).append(humidityEl);
                 }
-                // printWeather(fiveDayWeatherData, name); // pass our weather data to printWeather function and run it
             },
             error: function (error) {
                 console.log("There was an error while fetching weather data, please try again.")
