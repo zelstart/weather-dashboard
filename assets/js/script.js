@@ -46,7 +46,9 @@ $(document).ready(function () {
         // if a second item exists in searchBarText, trim whitespace on it
         if (searchBarText[1]) {
             let state = searchBarText[1].trim();
-            fetchCityCoord(cityName, state); // passes the cityname and zipcode as an argument to our fetchCityCoord function
+            fetchCityCoord(cityName, state); // passes the cityname and state as an argument to our fetchCityCoord function
+        } else {
+            fetchCityCoord(cityName)
         }
         $('#search-bar').val("");
         updateSearchHistory();
@@ -66,17 +68,21 @@ $(document).ready(function () {
         if (historySearchTarget[1]) { // if a second item exists in this array, trim it
             let state = historySearchTarget[1].trim();
             fetchCityCoord(cityName, state) // pass our variables to the fetch function
+        } else {
+            fetchCityCoord(cityName)
         }
     });
 
     // grab coordinates for user-entered city to use in fetchForecast function
     function fetchCityCoord(cityName, state) {
-        let cityQueryURL = "https://api.openweathermap.org/geo/1.0/direct?q=" + cityName;
-        // if the user included a state in their entry, it will be used in the query URL
+    
+        let cityQueryURL = "https://api.openweathermap.org/geo/1.0/direct?q=";
         if (state) {
-            cityQueryURL += "," + state + ",US"
+            cityQueryURL += `${cityName},${state},US`;
+        } else {
+            cityQueryURL += cityName;
         }
-        cityQueryURL += "&appid=7a0c14487898bae146a1b3a3863031d0"
+        cityQueryURL += "&appid=7a0c14487898bae146a1b3a3863031d0";
 
 
         // get coordinates
@@ -84,17 +90,16 @@ $(document).ready(function () {
             url: cityQueryURL,
             method: "GET",
             success: function (coordResponse) { // if the call is successful, we need to save the coords 
+                if (coordResponse.length > 0) { // ATTEMPT to make it give us an error if user didn't enter valid data.
                 let lat = coordResponse[0].lat;
                 let lon = coordResponse[0].lon;
                 let name = coordResponse[0].name;
                 console.log(lat, lon, name) // checking to make sure variables are correct
-                if (coordResponse.length > 0) { // ATTEMPT to make it give us an error if user didn't enter valid data.
                     let forecastQueryURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=7a0c14487898bae146a1b3a3863031d0&units=imperial` // create the url that we'll use in fetchForecast, convert units to imperial 
                     fetchForecast(forecastQueryURL, name) // if the call has been successful, fetchForecast function will run. we're passing forecastQueryURL and name as an argument so we can access them in our called function
                     fetchCurrent(forecastQueryURL, name)
                     saveSearch(cityName + (state ? (", " + state) : ""));
                     updateSearchHistory();
-                    console
                 } else {
                     console.log("Could not fetch coordinates for city -- please try again", error);
                     alert("Could not fetch coordinates for city -- please try again");
@@ -167,7 +172,7 @@ $(document).ready(function () {
                     }
                     fiveDayWeatherData.push(dailyWeatherData); // add the six objects to the variable we created above
                 } // creates a new card containing each of the 5 days' data
-                $('#five-day-forecast').empty();
+                $('#five-day-forecast').empty(); // gets rid of old cards before appending new ones
                 for (let i = 0; i < fiveDayWeatherData.length; i++) {
                     //create card div
                     let forecastCard = $('<div>').addClass('col-lg-2 col-8 cstm-card-bg p-3 card-shadow mx-3 mb-3 rounded')
@@ -194,6 +199,5 @@ $(document).ready(function () {
     function formatDate(timestamp) {
         return dayjs(timestamp * 1000).format('ddd, MM • DD • YYYY')
     }
-
-
+    
 })
